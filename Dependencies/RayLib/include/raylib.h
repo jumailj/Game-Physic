@@ -179,6 +179,28 @@
 
 // Vector2 type
 typedef struct Vector2 {
+
+    Vector2 operator += (Vector2 const& src) {
+        Vector2 Temp;
+        Temp.x = this->x += src.x;
+        Temp.y = this->y += src.y;
+        return Temp;
+    }
+
+    Vector2 operator * (Vector2 const& src) {
+        Vector2 Temp;
+        Temp.x = this->x * src.x;
+        Temp.y = this->y * src.y;
+        return Temp;
+    }
+
+    Vector2 operator + (Vector2 const& src) {
+        Vector2 Temp;
+        Temp.x = this->x + src.x;
+        Temp.y = this->y + src.y;
+        return Temp;
+    }
+
     float x;
     float y;
 } Vector2;

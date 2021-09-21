@@ -1,6 +1,7 @@
 #include <iostream>
+#include <vector>
+
 #include "raylib.h"
-#include <list>
 #include "Ball.h"
 
 // delta time = GetFrameTime();
@@ -28,37 +29,62 @@ int main() {
 	Ball ball(Vector2{ 0,0 }, 30, RED);
 	char ballText[40] = "";
 
+
 	const int WindowWidht = 1200;
 	const int WindowHeight = 700;
 
-	InitWindow(WindowWidht, WindowHeight, "text");
+	InitWindow(WindowWidht, WindowHeight, "Game Physics");
 	SetTargetFPS(60);
 
 	float xpos = WindowWidht/2;
 	float ypos = WindowHeight/2;
+	Vector2 pos = {xpos,ypos};
 
-	Vector2 velocityVector{ 50,-20 }; // average 
-	Vector2 netForceVector;
-	
-	std::list<Vector2> forceVectorList;
-
-
-
+	//delta time;
 	double DeltaTime;
+	Vector2 DeltaTime2{ 0,0 };
 
 
+	Vector2 velocityVector{ 1,0 }; // average 
+
+	std::vector<Vector2> netForceVector(3);
+	std::vector<Vector2>::iterator netforceIterator = netForceVector.begin();
+
+	// NET FORCE;
+	netForceVector.at(0) = Vector2{ 1,1 };
+	netForceVector.at(1) = Vector2{ 5,1 };
+	netForceVector.at(2) = Vector2{ -6,-2 };
+
+	Vector2 netForce{ 0,0 };
 
 	while (!WindowShouldClose()) {
 
 		DeltaTime = GetFrameTime();
-		sprintf(ballText, "Ball pos: x = %d ,%d", (int)xpos, (int)ypos);
+		DeltaTime2.x = DeltaTime;
+		DeltaTime2.y = DeltaTime;
 
+		sprintf(ballText, "Ball pos: x = %d , y = %d", (int)pos.x, (int)pos.y);
 		DrawText(ballText, 10, 10, 30, BLACK);
 
-		GetMove(&xpos, &ypos); 
+		GetMove(&pos.x, &pos.y); 
+		netForce = Vector2{ 0,0 };
+
+		while(netforceIterator != netForceVector.end()) {
+			netForce = netForce + (*netforceIterator);
+			netforceIterator++;
+		}netforceIterator = netForceVector.begin();
+		
+
+		if (netForce.x == 0 && netForce.y == 0) {
+			pos += (velocityVector) + netForce * DeltaTime2;
+		}
+		else {
+			DrawText("UNBALANCED FORCE DECTED", 10, 39, 30, BLACK);
+		}
+		ball.SetPosition(pos);
 
 
-		ball.SetPosition(xpos+= velocityVector.x * DeltaTime , ypos += velocityVector.y * DeltaTime);
+
 		BeginDrawing();
 
 		ClearBackground(DARKPURPLE);

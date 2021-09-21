@@ -1,17 +1,15 @@
 #include "Ball.h"
 
-
-
 Ball::Ball(Vector2 position, float radius, Color color)
 	:m_Position{ position }, m_Radius{ radius }, m_Color{ color }
 {
 
 }
 
-void Ball::SetPosition(float x, float y)
+void Ball::SetPosition(Vector2 source)
 {
-	m_Position.x = x;
-	m_Position.y = y;
+	m_Position.x = source.x;
+	m_Position.y = source.y;
 }
 
 void Ball::DrawBall()const {
