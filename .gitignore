@@ -1,0 +1,8 @@
+#files
+
+.vs
+
+#folders
+
+*bin/
+*bin-int/
