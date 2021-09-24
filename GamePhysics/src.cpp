@@ -7,16 +7,17 @@
 #include "GUIText.h"
 
 
-// delta time = GetFrameTime();
+// gui text;
+
 
 
 int main() {
 
-	// gui text;
 	GUIText TextBallPos(850, 10, 20, Color(WHITE), true);
 	GUIText TextvelocityVector(850, 30, 20, Color(WHITE), true);
 	GUIText TextAccleration(850, 50, 20, Color(WHITE), true);
 	GUIText TextMass(850, 70, 20, Color(WHITE), true);
+	
 
 
 	// object;
@@ -26,8 +27,12 @@ int main() {
 	const int WindowWidht = 1200;
 	const int WindowHeight = 700;
 
+
+
 	InitWindow(WindowWidht, WindowHeight, "Game Physics");
 	SetTargetFPS(60);
+
+
 
 
 	float xpos = WindowWidht/2;
@@ -46,14 +51,12 @@ int main() {
 	// NET FORCE;
 	netForceVector.at(0) = Vector2{ 0,0 };
 	netForceVector.at(1) = Vector2{ 1,0 };
-	netForceVector.at(2) = Vector2{ 0,0 };
+	netForceVector.at(2) = Vector2{ 0,2 };
 	Vector2 netForce{ 0,0 };
 
 	// mass;
-	float mass = 20;
+	float mass = 10;
 	Vector2 accelerationVector{ 0,0 };
-
-
 
 	Vector2 mousePoint = { 0.0f, 0.0f };
 	Texture2D add = LoadTexture("res\\add.png");
@@ -74,9 +77,13 @@ int main() {
 
 	while (!WindowShouldClose()) {
 
+
 		if (CheckCollisionPointRec(mousePoint, addbtnBounds)) {
 			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 				velocityVector.x++;
+			if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
+				velocityVector.x--;
+
 			
 		}
 
@@ -125,10 +132,19 @@ int main() {
 
 		// Drawing;
 		BeginDrawing();
-		ClearBackground(DARKPURPLE);
+		ClearBackground(BLACK);
 
 		BeginMode2D(camera); //  inCamera Control;
+
+		// DRAWING CHECKS
+		for (int i = 1; i < 100; i++) {
+			DrawLine(10 * i * (10), 10, 10 * i * (10), 5000, GREEN);
+			DrawLine(10, 10*i*(10), 5000, 10*i*(10), GREEN);
+		}
+
 		ball.DrawBall();
+
+
 		EndMode2D();
 
 
@@ -138,6 +154,9 @@ int main() {
 		TextvelocityVector.UpdateText("Velocity: x = %.2f, y = %.2f", velocityVector.x, velocityVector.y);
 		TextAccleration.UpdateText("Accleration: x = %.2f, y = %.2f", accelerationVector.x, accelerationVector.y);
 		TextMass.UpdateText("Mass= %.1f kg", mass);
+
+
+
 
 		EndDrawing();
 	}

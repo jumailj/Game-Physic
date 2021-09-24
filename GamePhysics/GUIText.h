@@ -21,10 +21,8 @@ public:
 	GUIText(int posX_, int posY_, int fontSize_, Color color_, bool isDraw_ = true)
 		:posX{ posX_ }, posY{ posY_ }, fontSize{ fontSize_ }, color{ color_ }, isDraw{isDraw_}
 	{
-		strcpy(text, "no Text");
+		strcpy(text, "\0");
 	}
-
-
 	
 	void UpdateText(const char* format, ...) 
 	{
@@ -38,14 +36,12 @@ public:
 		Draw();	
 	}
 
-
 	void Draw() {
 		if (isDraw) {
 			DrawText(text, posX, posY, fontSize, color);
 		}
 
 	}
-
 
 	~GUIText() {
 
