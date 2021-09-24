@@ -180,6 +180,7 @@
 // Vector2 type
 typedef struct Vector2 {
 
+    // operator overloaded;
     Vector2 operator += (Vector2 const& src) {
         Vector2 Temp;
         Temp.x = this->x += src.x;
