@@ -5,7 +5,6 @@
 
 #include <iostream>
 
-
 // it will draw default -> 
 class GUIText
 {
@@ -18,34 +17,10 @@ class GUIText
 	bool isDraw;
 
 public:
-	GUIText(int posX_, int posY_, int fontSize_, Color color_, bool isDraw_ = true)
-		:posX{ posX_ }, posY{ posY_ }, fontSize{ fontSize_ }, color{ color_ }, isDraw{isDraw_}
-	{
-		strcpy(text, "\0");
-	}
-	
-	void UpdateText(const char* format, ...) 
-	{
-		va_list aptr;
-		
-		va_start(aptr, format);
+	GUIText(int posX_, int posY_, int fontSize_, Color color_, bool isDraw_ = true);
+	void UpdateText(const char* format, ...);
+	void Draw();
+	~GUIText();
 
-		vsprintf(text, format, aptr);
-		va_end(aptr);
-
-		Draw();	
-	}
-
-	void Draw() {
-		if (isDraw) {
-			DrawText(text, posX, posY, fontSize, color);
-		}
-
-	}
-
-	~GUIText() {
-
-
-	}
 };
 

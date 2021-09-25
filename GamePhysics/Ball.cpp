@@ -14,4 +14,5 @@ void Ball::SetPosition(Vector2 source)
 
 void Ball::DrawBall()const {
 	DrawCircle(m_Position.x, m_Position.y, m_Radius, m_Color);
+	//DrawRectangle(m_Position.x, m_Position.y, 30, 2, WHITE);
 }
