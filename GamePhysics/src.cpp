@@ -5,42 +5,40 @@
 #include "Ball.h"
 
 #include "GUIText.h"
+#include "Window.h"
 
 // gui text;
 
 int main() {
+
+	// crate window;
+	Window newwindow(1200, 700,"Game physics"); // window initilized
+	newwindow.WindowInit();
+	
 	//right side
 	GUIText TextBallPos(850, 10, 20, Color(WHITE), true);
 	GUIText TextvelocityVector(850, 30, 20, Color(WHITE), true);
 	GUIText TextAccleration(850, 50, 20, Color(WHITE), true);
-	GUIText TextMass(850, 70, 20, Color(WHITE), true);
-	// left side;
-	GUIText TextnetForceVector1(80, 0, 20, Color(WHITE), true);
-
 	
+	// left side;
+	GUIText TextnetForceVector1(80, 10, 20, Color(WHITE), true);
+	GUIText TextMass(80, 30, 20, Color(WHITE), true);
+
 	// object;
 	Ball ball(Vector2{ 0,0 }, 30, RED);
 	Ball ball1(Vector2{ 10,10}, 30, BLUE);
 
 
-	const int WindowWidht = 1200;
-	const int WindowHeight = 700;
-
-	InitWindow(WindowWidht, WindowHeight, "Game Physics");
-	SetTargetFPS(60);
-
-
-	float xpos = WindowWidht/2;
-	float ypos = WindowHeight/2;
-
-	Vector2 pos = {xpos,ypos};
-	Vector2 pos1 = { xpos, ypos + 150 };
+	Vector2 pos = {newwindow.getWindowWidht()/2,newwindow.getWindowHeight()/2};
+	Vector2 pos1 = { newwindow.getWindowWidht() / 2,(newwindow.getWindowHeight() / 2 ) +150};
 
 	//delta time;
 	double DeltaTime;
-	Vector2 DeltaTime2{ 0,0 };
+	Vector2 Vec2DeltaTime{ 0,0 };
 
 	//gravity; --(bool)--
+
+
 
 	std::vector<Vector2> netForceVectorList(3);
 	std::vector<Vector2>::iterator netforceIterator = netForceVectorList.begin();
@@ -73,13 +71,15 @@ int main() {
 	// CAMERA SETUP
 	Camera2D camera = { 0 };
 	camera.target = Vector2{ ball.m_Position.x, ball.m_Position.y };
-	camera.offset = Vector2{ WindowWidht / 2.0f, WindowHeight / 2.0f };
+	camera.offset = Vector2{ newwindow.getWindowWidht() / 2.0f, newwindow.getWindowHeight()/ 2.0f };
 	camera.rotation = 0.0f;
 	camera.zoom = 1.0f;
 
 
 
-	while (!WindowShouldClose()) {
+	///while (!WindowShouldClose()) {
+		//while (newwindow)
+		while (!newwindow.WindowClosed()){
 	
 		// netfor 1;
 		if (CheckCollisionPointRec(mousePoint, addbtnBounds)) {
@@ -117,7 +117,7 @@ int main() {
 
 
 		// camera Controls;
-  // Camera target follows player
+		 // Camera target follows player
 		camera.target = Vector2{ ball.m_Position.x, ball.m_Position.y };
 
 		// Camera zoom controls
@@ -136,28 +136,27 @@ int main() {
 		// mouse pos:
 		mousePoint = GetMousePosition();
 
+		// deltat time calculation;
 		DeltaTime = GetFrameTime();
-		DeltaTime2.x = (float)DeltaTime;
-		DeltaTime2.y = (float)DeltaTime;
+		Vec2DeltaTime.x = (float)DeltaTime;
+		Vec2DeltaTime.y = (float)DeltaTime;
 
 
 		netForce = Vector2{ 0,0 };
-
 		while(netforceIterator != netForceVectorList.end()) {
 			netForce = netForce + (*netforceIterator);
 			netforceIterator++;
 		}netforceIterator = netForceVectorList.begin();
-		
-
 
 		accelerationVector = { netForce.x / mass, netForce.y / mass };
-		velocityVector += accelerationVector *DeltaTime2;
+		velocityVector += accelerationVector *  Vec2DeltaTime;
+
 
 		// update positoin;
-		pos += (velocityVector)+netForce * DeltaTime2;
+		pos += (velocityVector)+netForce * Vec2DeltaTime;
 		ball.SetPosition(pos);
 
-		pos1 += (velocityVector)+netForce * DeltaTime2;
+		
 		ball1.SetPosition(pos1);
 
 
@@ -167,7 +166,7 @@ int main() {
 
 		BeginMode2D(camera); //  inCamera Control;
 
-		// DRAWING CHECKS
+		// DRAW CHECKS
 		for (int i = 1; i < 100; i++) {
 			DrawLine(10 * i * (10), 10, 10 * i * (10), 5000, GREEN);
 			DrawLine(10, 10*i*(10), 5000, 10*i*(10), GREEN);
@@ -176,9 +175,7 @@ int main() {
 		ball.DrawBall();
 		ball1.DrawBall();
 
-
 		EndMode2D();
-
 
 		DrawTextureRec(add, addSrceRec, Vector2{ 0,0 }, WHITE);
 		DrawTextureRec(add, _addSrceRec, Vector2{ 50,0 }, WHITE);
@@ -187,13 +184,12 @@ int main() {
 		TextvelocityVector.UpdateText("Velocity: x = %.2f, y = %.2f", velocityVector.x, velocityVector.y);
 		TextAccleration.UpdateText("Accleration: x = %.2f, y = %.2f", accelerationVector.x, accelerationVector.y);
 		TextMass.UpdateText("Mass= %.1f kg", mass);
-
 		TextnetForceVector1.UpdateText("Force 1: x = %.2f, y = %.2f", netForceVectorList.at(0).x, netForceVectorList.at(0).y);
 
 
 		EndDrawing();
 	}
-	CloseWindow();
+
 
 
 	return 0;

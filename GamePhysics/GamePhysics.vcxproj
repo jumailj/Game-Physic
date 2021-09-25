@@ -91,10 +91,12 @@
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="GUIText.cpp" />
     <ClCompile Include="src.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ball.h" />
     <ClInclude Include="GUIText.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\add.png" />
