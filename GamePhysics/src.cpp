@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 #include "raylib.h"
 #include "Ball.h"
@@ -8,6 +9,14 @@
 #include "Window.h"
 
 // gui text;
+inline void DrawGrind() {
+	for (int i = 1; i < 100; i++) {
+		DrawLine(10 * i * (10), 0, 10 * i * (10), 10000, GREEN);
+		DrawLine(0, 10 * i * (10), 10000, 10 * i * (10), GREEN);
+	}
+}
+
+bool gravity = true;
 
 int main() {
 
@@ -30,14 +39,18 @@ int main() {
 
 
 	Vector2 pos = {newwindow.getWindowWidht()/2,newwindow.getWindowHeight()/2};
-	Vector2 pos1 = { newwindow.getWindowWidht() / 2,(newwindow.getWindowHeight() / 2 ) +150};
+	Vector2 pos1 = { newwindow.getWindowWidht() / 2+400,(newwindow.getWindowHeight() / 2 ) +150};
 
 	//delta time;
 	double DeltaTime;
 	Vector2 Vec2DeltaTime{ 0,0 };
 
 	//gravity; --(bool)--
-
+	const float BigG = 6.673e-11f; // N * (m/kg)^2   [ [N] m^2 kg^ -2]
+	Vector2 offset{ 0.0f, 0.0f};
+	float rSquared = 0.0f;
+	Vector2 gravityFeltVector{ 0,0 };
+	float gravityMagnitude{ 0.0f };
 
 
 	std::vector<Vector2> netForceVectorList(3);
@@ -52,7 +65,9 @@ int main() {
 	Vector2 netForce{ 0,0 };
 
 	// mass;
-	float mass = 1;
+	float mass = 1000000;// read ball
+	float mass1 = 30000000; // blue ball
+
 	Vector2 accelerationVector{ 0,0 };
 
 	Vector2 mousePoint = { 0.0f, 0.0f };
@@ -151,12 +166,21 @@ int main() {
 		accelerationVector = { netForce.x / mass, netForce.y / mass };
 		velocityVector += accelerationVector *  Vec2DeltaTime;
 
-
 		// update positoin;
 		pos += (velocityVector)+netForce * Vec2DeltaTime;
-		ball.SetPosition(pos);
 
-		
+		if (gravity) {
+			offset = ball.m_Position - ball1.m_Position;
+			rSquared = pow(abs(offset.x) + abs(offset.y), 2); // todo check;
+			gravityMagnitude = BigG * mass * mass1 / rSquared;
+			gravityFeltVector = (offset / Vector2{ 0.1, 0.1 }) * Vector2{ gravityMagnitude, gravityMagnitude };
+
+			netForceVectorList.at(1) = gravityFeltVector * Vector2{ -1, -1 };
+		}
+
+
+
+		ball.SetPosition(pos);
 		ball1.SetPosition(pos1);
 
 
@@ -164,18 +188,14 @@ int main() {
 		BeginDrawing();
 		ClearBackground(BLACK);
 
-		BeginMode2D(camera); //  inCamera Control;
+			BeginMode2D(camera); //  inCamera Control;
+				// DRAW CHECKS
+				DrawGrind();
 
-		// DRAW CHECKS
-		for (int i = 1; i < 100; i++) {
-			DrawLine(10 * i * (10), 10, 10 * i * (10), 5000, GREEN);
-			DrawLine(10, 10*i*(10), 5000, 10*i*(10), GREEN);
-		}
+				ball.DrawBall();
+				ball1.DrawBall();
 
-		ball.DrawBall();
-		ball1.DrawBall();
-
-		EndMode2D();
+			EndMode2D();
 
 		DrawTextureRec(add, addSrceRec, Vector2{ 0,0 }, WHITE);
 		DrawTextureRec(add, _addSrceRec, Vector2{ 50,0 }, WHITE);
@@ -194,3 +214,4 @@ int main() {
 
 	return 0;
 }
+
