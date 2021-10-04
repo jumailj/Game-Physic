@@ -1,7 +1,8 @@
 #files
 
 .vs
-
+.sln
+.vcxproj
 #folders
 
 *bin/
